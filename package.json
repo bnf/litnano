@@ -1,0 +1,32 @@
+{
+  "name": "litnano",
+  "version": "0.0.0",
+  "description": "Minify HTML markup inside lit tagged template literals",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./esm/index.d.ts",
+        "default": "./esm/index.js"
+      },
+      "require": {
+        "types": "./cjs/index.d.ts",
+        "default": "./cjs/index.js"
+      }
+    }
+  },
+  "scripts": {
+    "clean": "rm -rf cjs esm",
+    "prebuild": "npm run clean",
+    "preversion": "npm run build",
+    "postversion": "git push --follow-tags",
+    "build:esm": "tsc --outDir esm",
+    "build:cjs": "tsc --module commonjs --outDir cjs",
+    "postbuild:cjs": "echo '{\"type\": \"commonjs\"}' > cjs/package.json",
+    "build": "npm run build:esm && npm run build:cjs"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.0"
+  }
+}
