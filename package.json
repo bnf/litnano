@@ -3,6 +3,18 @@
   "version": "0.0.0",
   "description": "Minify HTML markup inside lit tagged template literals",
   "license": "MIT",
+  "keywords": [
+    "lit",
+    "lit-html",
+    "htmlnano",
+    "cssnano",
+    "minify",
+    "html",
+    "literal",
+    "literals",
+    "template",
+    "tagged"
+  ],
   "type": "module",
   "exports": {
     ".": {
