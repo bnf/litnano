@@ -3,6 +3,7 @@ import type { Node, TaggedTemplateExpression, TemplateElement } from 'acorn'
 
 export interface Options {
   htmlnano?: typeof import('htmlnano').default,
+  onUpdate?: (node: TemplateElement, html: string) => void,
 }
 
 export const litnano = async (ast: Node, opt: Options = {}): Promise<void> => {
@@ -25,6 +26,7 @@ export const litnano = async (ast: Node, opt: Options = {}): Promise<void> => {
           throw new Error('HTML could not be minified')
         }
         min.forEach((html, index) => {
+          opt.onUpdate?.(node.quasi.quasis[index], html);
           node.quasi.quasis[index].value.raw = html
           node.quasi.quasis[index].value.cooked = html
         })
