@@ -28,3 +28,28 @@ You may pass a concrete `htmlnano` version to be used via the options parameter:
 import htmlnano from 'htmlnano'
 await litnano(ast, { htmlnano })
 ```
+
+## Rollup plugin usage
+
+A rollup plugin is provided via the `litnano/rollup` entrypoint. Make sure to
+declare this module before terser in order for literal identifiers not to be
+mangled yet.
+
+```js
+// rollup.config.mjs
+import { litnano } from 'litnano/rollup'
+import terser from '@rollup/plugin-terser'
+
+export default {
+  input: '…',
+  output: {
+    file: '…',
+    format: 'es',
+    sourcemap: true,
+  },
+  plugins: [
+    litnano(),
+    terser({ ecma: 2020, module: true })
+  ],
+}
+```

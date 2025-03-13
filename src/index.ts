@@ -5,16 +5,16 @@ export interface Options {
   htmlnano?: typeof import('htmlnano').default,
 }
 
-export const litnano = async (ast: Node, opt: Options = {}): Promise<void> => {
+export const litnano = async (ast: Node, opt: Options = {}): Promise<TaggedTemplateExpression[]> => {
   const htmlnano = opt.htmlnano ?? (await import('htmlnano')).default
-  const promises: Promise<void>[] = []
+  const promises: Promise<TaggedTemplateExpression>[] = []
   simple(ast, {
     TaggedTemplateExpression(node) {
       if (node.tag.type !== 'Identifier' || !['html', 'svg', 'css'].includes(node.tag.name)) {
         return
       }
       const isCss = node.tag.name === 'css';
-      const task = async (node: TaggedTemplateExpression): Promise<void> => {
+      const task = async (node: TaggedTemplateExpression): Promise<TaggedTemplateExpression> => {
         const placeholder = createPlaceholder(node.quasi.quasis)
         const combined = node.quasi.quasis.map(part => part.value.raw).join(placeholder)
         const { html } = await htmlnano.process(isCss ? `<style>${combined}</style>` : combined)
@@ -28,11 +28,12 @@ export const litnano = async (ast: Node, opt: Options = {}): Promise<void> => {
           node.quasi.quasis[index].value.raw = html
           node.quasi.quasis[index].value.cooked = html
         })
+        return node;
       }
       promises.push(task(node))
     },
   })
-  await Promise.all(promises)
+  return await Promise.all(promises)
 }
 
 /**
