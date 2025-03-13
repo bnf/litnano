@@ -10,11 +10,14 @@
     "cssnano",
     "minify",
     "html",
-    "literal",
-    "literals",
+    "css",
     "template",
-    "tagged"
+    "tagged",
+    "literals",
+    "ast"
   ],
+  "repository": "github:bnf/litnano",
+  "author": "Benjamin Franzke <ben@bnf.dev>",
   "type": "module",
   "exports": {
     ".": {

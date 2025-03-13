@@ -11,13 +11,13 @@ nodes using `htmlnano`.
 ```js
 import { litnano } from 'litnano'
 import { parse } from 'acorn'
-import { generate } from 'astring';
+import { generate } from 'astring'
 import { readFile, writeFile } from 'node:fs/promises'
 
 const code = await readFile('mycomponent.js', 'utf-8')
 const ast = parse(code, { ecmaVersion: 2023, sourceType: 'module' })
 await litnano(ast)
-await writeFile('mycomponent.min.js', generate(ast));
+await writeFile('mycomponent.min.js', generate(ast))
 ```
 
 ## Advanced usage
@@ -25,6 +25,6 @@ await writeFile('mycomponent.min.js', generate(ast));
 You may pass a concrete `htmlnano` version to be used via the options parameter:
 
 ```js
-import htmlnano from 'htmlnano';
+import htmlnano from 'htmlnano'
 await litnano(ast, { htmlnano })
 ```
