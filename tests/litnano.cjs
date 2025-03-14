@@ -8,7 +8,6 @@ const terser = require('@rollup/plugin-terser')
 const test = require('ava')
 
 test('[CJS] Minify from acorn', async (assert) => {
-  console.log('FOO', __filename)
   const code = await readFile(new URL('./fixtures/motion-slide.js', 'file://' + __filename), 'utf-8')
   const expected = await readFile(new URL('./fixtures/motion-slide.min.js', 'file://' + __filename), 'utf-8')
   const ast = parse(code, { ecmaVersion: 2023, sourceType: 'module' })

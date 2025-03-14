@@ -17,7 +17,9 @@ export const litnano = async (ast: Node, opt: Options = {}): Promise<TaggedTempl
       const task = async (node: TaggedTemplateExpression): Promise<TaggedTemplateExpression> => {
         const placeholder = createPlaceholder(node.quasi.quasis)
         const combined = node.quasi.quasis.map(part => part.value.raw).join(placeholder)
-        const { html } = await htmlnano.process(isCss ? `<style>${combined}</style>` : combined)
+        const { html } = await htmlnano.process(isCss ? `<style>${combined}</style>` : combined, {
+          removeAttributeQuotes: true,
+        })
         const res = isCss ? html.replace(/^<style>/, '').replace(/<\/style>$/, '') : html;
         const min = splitByPlaceholder(res, placeholder)
         if (min.length !== node.quasi.quasis.length) {
