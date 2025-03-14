@@ -50,7 +50,7 @@
     "build:cjs": "tsc --module commonjs --outDir cjs",
     "postbuild:cjs": "echo '{\"type\": \"commonjs\"}' > cjs/package.json",
     "build": "npm run build:esm && npm run build:cjs",
-    "test": "ava tests/litnano.js"
+    "test": "ava tests/litnano.js tests/litnano.cjs"
   },
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
