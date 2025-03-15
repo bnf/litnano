@@ -29,7 +29,7 @@ export class MotionSlide extends LitElement {
   render() {
     return html`
       <p>
-        <button @click=${() => (this.slid = !this.slid)}>Slide</button>
+        <button @click=${() => (this.slid = !this.slid)}>Slide ${'foo'}${'bar'}</button>
       </p>
       <p class="circle ${classMap({slid: this.slid})}" ${animate()}></p>
     `;

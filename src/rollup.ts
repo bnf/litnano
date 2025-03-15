@@ -16,7 +16,11 @@ export const litnano = (opt: Options = {}): Plugin => ({
       const ms = new MagicString(code)
       for (const node of nodes) {
         for (const templateElement of node.quasi.quasis) {
-          ms.update(templateElement.start, templateElement.end, templateElement.value.raw)
+          if (templateElement.start === templateElement.end) {
+            ms.appendLeft(templateElement.start, templateElement.value.raw);
+          } else {
+            ms.update(templateElement.start, templateElement.end, templateElement.value.raw);
+          }
         }
       }
 
@@ -30,7 +34,7 @@ export const litnano = (opt: Options = {}): Plugin => ({
       }
     } catch (e) {
       if (e instanceof Error) {
-        this.error(e.message)
+        this.error(e)
         return null;
       }
       throw e
