@@ -1,5 +1,8 @@
 import { simple } from 'acorn-walk'
+import posthtml from 'posthtml'
 import type { Node, TaggedTemplateExpression, TemplateElement } from 'acorn'
+import { Buffer } from 'node:buffer';
+
 
 export interface Options {
   htmlnano?: typeof import('htmlnano').default,
@@ -17,17 +20,38 @@ export const litnano = async (ast: Node, opt: Options = {}): Promise<TaggedTempl
       const task = async (node: TaggedTemplateExpression): Promise<TaggedTemplateExpression> => {
         const placeholder = createPlaceholder(node.quasi.quasis)
         const combined = node.quasi.quasis.map(part => part.value.raw).join(placeholder)
-        const { html } = await htmlnano.process(isCss ? `<style>${combined}</style>` : combined, {
-          removeAttributeQuotes: true,
-          sortAttributes: false,
-          sortAttributesWithLists: false,
-          minifyCss: {
-            preset: [
-              'default',
-              { cssDeclarationSorter: false }
-            ]
-          },
-        })
+
+        const propertyReplacer = (map: (name: string) => string) => (tree: posthtml.Node) => {
+          tree.walk((node: posthtml.Node): posthtml.Node => {
+            if (node && node.attrs && typeof node.attrs === 'object') {
+              node.attrs = Object.fromEntries(Object.entries(node.attrs).map(([attrName, attrValue]) => [
+                attrName.startsWith('.') ? '.' + map(attrName.substr(1)) : attrName,
+                attrValue,
+              ]))
+            }
+            return node
+          })
+        }
+
+        const processor = posthtml([
+          propertyReplacer(name => Buffer.from(name).toString('hex')),
+          htmlnano({
+            removeAttributeQuotes: true,
+            sortAttributes: false,
+            sortAttributesWithLists: false,
+            normalizeAttributeValues: false,
+            collapseWhitespace: 'aggressive',
+            minifyCss: {
+              preset: [
+                'default',
+                { cssDeclarationSorter: false }
+              ]
+            },
+          }),
+          propertyReplacer(name => Buffer.from(name, 'hex').toString()),
+        ])
+        const { html } = await processor.process(isCss ? `<style>${combined}</style>` : combined);
+
         const res = isCss ? html.replace(/^<style>/, '').replace(/<\/style>$/, '') : html;
         const min = splitByPlaceholder(res, placeholder)
         if (min.length !== node.quasi.quasis.length) {

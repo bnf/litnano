@@ -75,6 +75,7 @@
     "magic-string": ">= 2.0"
   },
   "peerDependencies": {
+    "posthtml": ">= 0.16",
     "htmlnano": ">= 2.0"
   }
 }

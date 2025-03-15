@@ -30,7 +30,7 @@ export class MotionSlide extends LitElement {
     const width = document.clientWidth;
     const height = document.clientHeight;
     return html`
-      <p style="width: ${width + 'px'}; height: ${height + 'px'};">
+      <p style="width: ${width + 'px'}; height: ${height + 'px'};" .propName=${globalThis.fooBar}>
         <button @click=${() => (this.slid = !this.slid)}>Slide ${'foo'}${'bar'}</button>
       </p>
       <p class="circle ${classMap({slid: this.slid})}" ${animate()}></p>
