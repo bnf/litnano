@@ -19,6 +19,14 @@ export const litnano = async (ast: Node, opt: Options = {}): Promise<TaggedTempl
         const combined = node.quasi.quasis.map(part => part.value.raw).join(placeholder)
         const { html } = await htmlnano.process(isCss ? `<style>${combined}</style>` : combined, {
           removeAttributeQuotes: true,
+          sortAttributes: false,
+          sortAttributesWithLists: false,
+          minifyCss: {
+            preset: [
+              'default',
+              { cssDeclarationSorter: false }
+            ]
+          },
         })
         const res = isCss ? html.replace(/^<style>/, '').replace(/<\/style>$/, '') : html;
         const min = splitByPlaceholder(res, placeholder)
@@ -42,16 +50,13 @@ export const litnano = async (ast: Node, opt: Options = {}): Promise<TaggedTempl
  * Based on https://github.com/asyncLiz/minify-html-literals/blob/v1.3.5/src/strategy.ts#L98
  */
 function createPlaceholder(parts: TemplateElement[]): string {
-  // Using @ and (); will cause the expression not to be removed in CSS.
-  // However, sometimes the semicolon can be removed (ex: inline styles).
-  // In those cases, we want to make sure that the HTML splitting also
-  // accounts for the missing semicolon.
-  const suffix = '();'
-  let placeholder = '@template_expression'
-  while (parts.some(part => part.value.raw.includes(placeholder + suffix))) {
-    placeholder += '_'
-  }
-  return placeholder + suffix
+  let i = 0, placeholder: string;
+  const dash = '-';
+  do {
+    placeholder = `@template(--template${dash.repeat(++i)}expression)`
+  } while (parts.some(part => part.value.raw.includes(placeholder)));
+
+  return placeholder;
 }
 
 /**
