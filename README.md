@@ -31,9 +31,8 @@ await litnano(ast, { htmlnano })
 
 ## Rollup plugin usage
 
-A rollup plugin is provided via the `litnano/rollup` entrypoint. Make sure to
-declare this module before terser in order for literal identifiers not to be
-mangled yet.
+A rollup plugin is provided via the `litnano/rollup` entrypoint. It
+supports soucemaps and can be combined with `@rollup/plugin-terser`.
 
 ```js
 // rollup.config.mjs
