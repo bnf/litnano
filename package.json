@@ -16,7 +16,10 @@
     "literals",
     "ast"
   ],
-  "repository": "github:bnf/litnano",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bnf/litnano.git"
+  },
   "author": "Benjamin Franzke <ben@bnf.dev>",
   "type": "module",
   "exports": {
