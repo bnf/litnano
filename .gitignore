@@ -2,3 +2,4 @@
 /esm
 /package-lock.json
 /node_modules
+/tests/fixtures/motion-slide.webpack.js

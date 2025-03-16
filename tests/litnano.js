@@ -5,6 +5,7 @@ import { generate } from 'astring'
 import { rollup } from 'rollup'
 import { litnano as litnanoRollup } from 'litnano/rollup'
 import terser from '@rollup/plugin-terser'
+import webpack from 'webpack'
 import test from 'ava'
 
 test('[ESM] Minify from acorn', async (assert) => {
@@ -45,5 +46,58 @@ test('[ESM] Minify via rollup and terser', async (assert) => {
     output[0].code,
     expected,
     'Minimizes html and css in literals via rollup',
+  )
+})
+
+test('[ESM] Minify via webpack and terser', async (assert) => {
+  const expected = await readFile(new URL('./fixtures/motion-slide.webpack.expected.js', import.meta.url), 'utf-8')
+
+  const compiler = webpack({
+    mode: 'production',
+    //devtool: 'inline-source-map',
+    devtool: false,
+    entry: {
+      'motion-slide': './tests/fixtures/motion-slide.js',
+    },
+    experiments: {
+      outputModule: true,
+    },
+    target: 'es2020',
+    externals: {
+      'lit': 'lit',
+      'lit/directives/class-map.js': 'lit/directives/class-map.js',
+      '@lit-labs/motion': '@lit-labs/motion',
+    },
+    output: {
+      module: true,
+      filename: '[name].webpack.js',
+      path: new URL('./fixtures/', import.meta.url).pathname,
+    },
+    module: {
+      rules: [{
+        test: /\.js$/,
+        use: [{ loader: 'litnano/webpack' }]
+      }]
+    },
+    optimization: {
+      minimize: true,
+    }
+  })
+
+  await new Promise((resolve, reject) => {
+    compiler.run((err, stats) => {
+      if (err) {
+        reject(err)
+      } else {
+        compiler.close(closeErr => closeErr ? reject(closeErr) : resolve())
+      }
+    })
+  })
+
+  const code = await readFile(new URL('./fixtures/motion-slide.webpack.js', import.meta.url), 'utf-8')
+  assert.is(
+    code,
+    expected,
+    'Minimizes html and css in literals via webpack',
   )
 })

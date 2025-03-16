@@ -52,3 +52,26 @@ export default {
   ],
 }
 ```
+
+## Webpack loader usage
+
+A webpack loader is provided via the `litnano/webpack` entrypoint. It
+supports soucemaps and can be combined with `terser-webpack-plugin`.
+
+```js
+// webpack.config.js
+export default {
+  …
+  module: {
+    rules: [{
+      test: /\.js$/,
+      use: [{ loader: 'litnano/webpack' }]
+    }]
+  },
+  optimization: {
+    minimizer: [
+      new TerserPlugin({}),
+    ]
+  }
+}
+```
