@@ -11,7 +11,7 @@ export const litnano = (opt: Options = {}): Plugin => ({
     } catch (e) {
       if (e instanceof Error) {
         this.error(e)
-        return null;
+        return null
       }
       throw e
     }
