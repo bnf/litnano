@@ -1,11 +1,7 @@
-import { litnano } from 'litnano'
 import { readFile } from 'fs/promises'
+import { litnano } from 'litnano'
 import { parse } from 'acorn'
 import { generate } from 'astring'
-import { rollup } from 'rollup'
-import { litnano as litnanoRollup } from 'litnano/rollup'
-import terser from '@rollup/plugin-terser'
-import webpack from 'webpack'
 import test from 'ava'
 
 test('[ESM] Minify from acorn', async (assert) => {
@@ -23,6 +19,9 @@ test('[ESM] Minify from acorn', async (assert) => {
 test('[ESM] Minify via rollup and terser', async (assert) => {
   const expected = await readFile(new URL('./fixtures/motion-slide.min.tersed.js', import.meta.url), 'utf-8')
 
+  const { rollup } = await import('rollup')
+  const { litnano } = await import('litnano/rollup')
+  const { default: terser } = await import('@rollup/plugin-terser')
   const bundle = await rollup({
     input: new URL('./fixtures/motion-slide.js', import.meta.url).pathname,
     external: [
@@ -31,7 +30,7 @@ test('[ESM] Minify via rollup and terser', async (assert) => {
       '@lit-labs/motion',
     ],
     plugins: [
-      litnanoRollup(),
+      litnano(),
       terser({ ecma: 2020, module: true }),
     ],
   })
@@ -52,9 +51,9 @@ test('[ESM] Minify via rollup and terser', async (assert) => {
 test('[ESM] Minify via webpack and terser', async (assert) => {
   const expected = await readFile(new URL('./fixtures/motion-slide.webpack.expected.js', import.meta.url), 'utf-8')
 
+  const { default: webpack } = await import('webpack');
   const compiler = webpack({
     mode: 'production',
-    //devtool: 'inline-source-map',
     devtool: false,
     entry: {
       'motion-slide': './tests/fixtures/motion-slide.js',
@@ -76,7 +75,9 @@ test('[ESM] Minify via webpack and terser', async (assert) => {
     module: {
       rules: [{
         test: /\.js$/,
-        use: [{ loader: 'litnano/webpack' }]
+        use: [
+          { loader: 'litnano' }
+        ]
       }]
     },
     optimization: {
