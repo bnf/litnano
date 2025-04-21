@@ -24,7 +24,7 @@ export const litnano = async (ast: Node, opt: Options = {}): Promise<TaggedTempl
           tree.walk((node: posthtml.Node): posthtml.Node => {
             if (node && node.attrs && typeof node.attrs === 'object') {
               node.attrs = Object.fromEntries(Object.entries(node.attrs).map(([attrName, attrValue]) => [
-                attrName.startsWith('.') ? '.' + map(attrName.substr(1)) : attrName,
+                attrName.startsWith('.') || attrName.startsWith('@') ? attrName.substring(0, 1) + map(attrName.substring(1)) : attrName,
                 attrValue,
               ]))
             }

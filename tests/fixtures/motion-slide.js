@@ -34,6 +34,7 @@ export class MotionSlide extends LitElement {
         <button @click=${() => (this.slid = !this.slid)}>Slide ${'foo'}${'bar'}</button>
       </p>
       <p class="circle ${classMap({slid: this.slid})}" ${animate()}></p>
+      <div @camelCase=${e => console.log(e)}></div>
     `;
   }
 }
