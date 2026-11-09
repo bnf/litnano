@@ -40,6 +40,7 @@ export const litnano = async (ast: Node, opt: Options = {}): Promise<TaggedTempl
             sortAttributesWithLists: false,
             normalizeAttributeValues: false,
             collapseWhitespace: 'aggressive',
+            removeOptionalTags: false,
             minifyCss: {
               preset: [
                 'default',
