@@ -68,7 +68,7 @@
     "test": "ava tests/litnano.js tests/litnano.cjs"
   },
   "devDependencies": {
-    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-terser": "^1.0.2",
     "@types/node": "^22.13.10",
     "acorn": "^8.14.1",
     "astring": "^1.9.0",
@@ -76,10 +76,10 @@
     "cssnano": "^7.0.6",
     "htmlnano": "^3.6.1",
     "magic-string": "^0.30.17",
-    "rollup": "^4.35.0",
+    "rollup": "^4.59.0",
     "source-map": "^0.7.4",
     "typescript": "^5.8.0",
-    "webpack": "^5.98.0"
+    "webpack": "^5.105.0"
   },
   "dependencies": {
     "acorn-walk": "^8.3.4"
